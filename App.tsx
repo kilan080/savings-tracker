@@ -41,7 +41,8 @@ export default function App() {
                 entry &&
                 typeof entry === "object" &&
                 "id" in entry &&
-                "amount" in entry,
+                "amount" in entry &&
+                "type" in entry,
             );
           if (isValidShape) {
             setEntries(parsed);
