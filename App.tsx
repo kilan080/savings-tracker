@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#888",
     marginBottom: 8,
+    textAlign: "right",
   },
   typeToggle: {
     flexDirection: "row",
