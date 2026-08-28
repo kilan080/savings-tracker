@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 8,
+    borderRadius: 20,
     width: "100%",
     padding: 10,
     marginBottom: 12,
@@ -201,7 +201,12 @@ const styles = StyleSheet.create({
   entry: {
     fontSize: 18,
     paddingVertical: 10,
-    borderBottomWidth: 3,
+    borderBottomWidth: 1,
+    borderRadius: 20,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    textAlign: "center",
     borderBottomColor: "#5022cfff",
   },
   date: {
