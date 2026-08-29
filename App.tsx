@@ -24,6 +24,10 @@ export default function App() {
   const [amount, setAmount] = useState("");
   const [entries, setEntries] = useState<Entry[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [filter, setFilter] = useState<"all" | "deposit" | "withdrawal">("all");
+  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "amount">(
+    "newest",
+  );
   const [type, setType] = useState<"deposit" | "withdrawal">("deposit");
 
   // Load saved entries once, when the app starts
@@ -97,6 +101,14 @@ export default function App() {
     return entry.type === "deposit" ? sum + entry.amount : sum - entry.amount;
   }, 0);
 
+  const displayedEntries = entries
+    .filter((entry) => filter === "all" || entry.type === filter)
+    .sort((a, b) => {
+      if (sortBy === "newest") return Number(b.id) - Number(a.id);
+      if (sortBy === "oldest") return Number(a.id) - Number(b.id);
+      return b.amount - a.amount; //amount, highest first.
+    });
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Savings Tracker</Text>
@@ -144,9 +156,49 @@ export default function App() {
 
       <Button title="Add" onPress={handleAdd} />
 
+      <View style={styles.filterRow}>
+        {(["all", "deposit", "withdrawal"] as const).map((f) => (
+          <TouchableOpacity
+            key={f}
+            style={[
+              styles.filterButton,
+              filter === f && styles.filterButtonActive,
+            ]}
+            onPress={() => setFilter(f)}
+          >
+            <Text
+              style={filter == f ? styles.filterTextActive : styles.filterText}
+            >
+              {f === "all" ? "All" : f === "deposit" ? "Deposit" : "Withdrawal"}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <View style={styles.filterRow}>
+        {(["newest", "oldest", "amount"] as const).map((s) => (
+          <TouchableOpacity
+            key={s}
+            style={[
+              styles.filterButton,
+              sortBy === s && styles.filterButtonActive,
+            ]}
+            onPress={() => setSortBy(s)}
+          >
+            <Text>
+              {s === "newest"
+                ? "Newest"
+                : s === "oldest"
+                  ? "Oldest"
+                  : "Highest"}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       <FlatList
         style={styles.List}
-        data={entries}
+        data={displayedEntries}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleDelete(item.id)}>
@@ -240,5 +292,30 @@ const styles = StyleSheet.create({
   },
   withdrawalText: {
     color: "#c62828",
+  },
+  filterRow: {
+    flexDirection: "row",
+    marginBottom: 8,
+    width: "100%",
+  },
+  filterButton: {
+    flex: 1,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    alignItems: "center",
+  },
+  filterButtonActive: {
+    backgroundColor: "#333",
+    borderColor: "#fff",
+  },
+  filterText: {
+    fontSize: 12,
+    color: "#333",
+  },
+  filterTextActive: {
+    fontSize: 12,
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
