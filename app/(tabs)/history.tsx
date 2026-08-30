@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
+import { Dimensions } from "react-native";
+import { LineChart } from "react-native-chart-kit";
 import { useSavings } from "../../context/SavingsContext";
 
 export default function HistoryScreen() {
@@ -19,6 +21,21 @@ export default function HistoryScreen() {
     return entry.type === "deposit" ? sum + entry.amount : sum - entry.amount;
   }, 0);
 
+  // Build cumulative balance over time, in chronological order
+  const chronological = [...entries].sort(
+    (a, b) => Number(a.id) - Number(b.id),
+  );
+  let runningBalannce = 0;
+
+  const chartData = chronological.map((entry) => {
+    runningBalannce =
+      entry.type === "deposit"
+        ? runningBalannce + entry.amount
+        : runningBalannce - entry.amount;
+
+    return runningBalannce;
+  });
+
   const displayedEntries = entries
     .filter((entry) => filter === "all" || entry.type === filter)
     .sort((a, b) => {
@@ -30,6 +47,27 @@ export default function HistoryScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.total}>₦{total.toLocaleString()}</Text>
+
+      {chartData.length > 1 && (
+        <LineChart
+          data={{
+            labels: chartData.map((_, i) => (i + 1).toString()),
+            datasets: [{ data: chartData }],
+          }}
+          width={Dimensions.get("window").width - 30}
+          height={180}
+          yAxisLabel="₦"
+          chartConfig={{
+            backgroundColor: "#fff",
+            backgroundGradientFrom: "#fff",
+            backgroundGradientTo: "#fff",
+            decimalPlaces: 0,
+            color: (opacity = 1) => `rgba(46, 125, 50, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          }}
+          style={{ marginBottom: 20, borderRadius: 16 }}
+        />
+      )}
 
       <View style={styles.filterRow}>
         {(["all", "deposit", "withdrawal"] as const).map((f) => (
