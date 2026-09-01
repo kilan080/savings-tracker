@@ -155,14 +155,14 @@ const styles = StyleSheet.create({
   filterRow: { flexDirection: "row", marginBottom: 8, width: "100%" },
   filterButton: {
     flex: 1,
-    padding: 8,
+    padding: 9,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#cccd",
     alignItems: "center",
   },
   filterButtonActive: { backgroundColor: "#333", borderColor: "#333" },
   filterText: { fontSize: 12, color: "#333" },
-  filterTextActive: { fontSize: 12, color: "#fff", fontWeight: "bold" },
+  filterTextActive: { fontSize: 12, color: "#ffff", fontWeight: "bold" },
   list: { marginTop: 12, width: "100%" },
   entry: {
     fontSize: 18,
